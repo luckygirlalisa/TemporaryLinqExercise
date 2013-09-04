@@ -16,7 +16,7 @@ jobs/*/config-history/**/*.xml
 # vs
 obj
 bin
-*.csproj.user
+*.csproj
 *.vbproj.user
 *.vshost.*
 *ReSharper*
