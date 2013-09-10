@@ -70,5 +70,15 @@ namespace LinqExerciseTest
             var expectedMultipleAgeOfPeople = new List<int> {20, 40};
             Assert.That(modifiedAgeOfPeople, Is.EqualTo(expectedMultipleAgeOfPeople));
         }
+
+        [Test]
+        public void Should_get_upper_case_and_lower_case_of_list_with_select()
+        {
+            var people = new List<Person> {new Person {Name = "Xiaofeng"}, new Person {Name = "XiaoHong"}};
+            var nameOfPeople = managePeople.GetNameOf(people);
+            var upperCaseName = managePeople.GetUpperCaseName(nameOfPeople);
+            Assert.That(upperCaseName[0], Is.EqualTo("XIAOFENG"));
+        }
+
     }
 }

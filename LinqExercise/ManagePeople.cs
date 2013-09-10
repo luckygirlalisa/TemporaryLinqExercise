@@ -36,6 +36,16 @@ namespace LinqExercise
         {
             return people.Select(p => p.Age*2).ToList();
         }
+
+        public List<string> GetNameOf(List<Person> people)
+        {
+            return people.Select(p => p.Name).ToList();
+        }
+
+        public List<string> GetUpperCaseName(List<string> nameOfPeople)
+        {
+            return nameOfPeople.Select(n => n.ToUpper()).ToList();
+        }
     }
 }
 
