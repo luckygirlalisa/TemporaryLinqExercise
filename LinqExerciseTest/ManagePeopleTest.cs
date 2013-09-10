@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using LinqExercise;
 using NUnit.Framework;
 
-namespace LinqExercise
+namespace LinqExerciseTest
 {
     class ManagePeopleTest
     {
@@ -14,7 +15,7 @@ namespace LinqExercise
         public void Init()
         {
             person1 = new Person { Name = "Xiaohong", Age = 26 };
-            person2 = new Person {Name = "Xiaohong", Age = 28};
+            person2 = new Person { Name = "Xiaohong", Age = 28 };
 
             people = new List<Person>
                 {
@@ -57,18 +58,17 @@ namespace LinqExercise
             Assert.That(findedPeople, Is.EqualTo(expectedPeople));
         }
 
-//        [Test, Ignore] //(open after implement)
-//        public void Should_find_person_list_older_than_25_with_select()
-//        {
-//            var findedPeople = managePeople.FindPersonListOlderThan25WithSelect(people);
-//            var expectedPeople = new List<Person> {person1, person2};
-//            Assert.That(findedPeople, Is.EqualTo(expectedPeople));
-//        }
-    }
+        [Test] 
+        public void should_get_age_list_of_people_with_select()
+        {
+            var people = new List<Person> {new Person {Age = 10}, new Person {Age = 20}};
+            var ageOfPeople = managePeople.GetTheAge(people);
+            var expectedAgeOfPeople = new List<int> {10, 20};
+            Assert.That(ageOfPeople, Is.EqualTo(expectedAgeOfPeople));
 
-    public class Person
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
+            var modifiedAgeOfPeople = managePeople.MultipleAgeOf(people);
+            var expectedMultipleAgeOfPeople = new List<int> {20, 40};
+            Assert.That(modifiedAgeOfPeople, Is.EqualTo(expectedMultipleAgeOfPeople));
+        }
     }
 }
