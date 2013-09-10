@@ -42,9 +42,21 @@ namespace LinqExercise
             return people.Select(p => p.Name).ToList();
         }
 
-        public List<string> GetUpperCaseName(List<string> nameOfPeople)
+        public List<string> GetUpperCaseName(List<Person> people)
         {
-            return nameOfPeople.Select(n => n.ToUpper()).ToList();
+            return people.Select(n => n.Name.ToUpper()).ToList();
+        }
+
+        //Action in Select
+        public List<Person> GetUpperCaseNamePeople(List<Person> people)
+        {
+            return people.Select(UpperCaseName).ToList();
+        }
+
+        private Person UpperCaseName(Person person)
+        {
+            person.Name = person.Name.ToUpper();
+            return person;
         }
     }
 }

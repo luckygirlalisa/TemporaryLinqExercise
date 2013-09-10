@@ -72,13 +72,21 @@ namespace LinqExerciseTest
         }
 
         [Test]
-        public void Should_get_upper_case_and_lower_case_of_list_with_select()
+        public void Should_get_upper_case_name_list_with_select()
         {
             var people = new List<Person> {new Person {Name = "Xiaofeng"}, new Person {Name = "XiaoHong"}};
-            var nameOfPeople = managePeople.GetNameOf(people);
-            var upperCaseName = managePeople.GetUpperCaseName(nameOfPeople);
+            var upperCaseName = managePeople.GetUpperCaseName(people);
             Assert.That(upperCaseName[0], Is.EqualTo("XIAOFENG"));
         }
+
+        [Test]
+        public void Should_get_people_with_upper_case_name_using_select()
+        {
+            var people = new List<Person> {new Person{Name = "xiaoxiao"}, new Person{Name = "dada"}};
+            var peopleWithUpperCaseName = managePeople.GetUpperCaseNamePeople(people);
+            Assert.That(peopleWithUpperCaseName[0].Name, Is.EqualTo("XIAOXIAO"));
+        }
+
 
     }
 }
