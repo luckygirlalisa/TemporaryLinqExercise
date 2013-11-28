@@ -136,8 +136,8 @@ namespace LinqExerciseTest
         public void Should_get_upper_case_name_list_with_select()
         {
             var people = new List<Person> {new Person {Name = "Xiaofeng"}, new Person {Name = "XiaoHong"}};
-            var upperCaseName = people.Select(n =>n.Name = n.Name.ToUpper()).ToList();
-            Assert.That(people[0].Name, Is.EqualTo("XIAOFENG"));
+            var upperCaseName = people.Select(n =>n.Name.ToUpper()).ToList();
+            Assert.That(upperCaseName.First(), Is.EqualTo("XIAOFENG"));
         }
 
         [Test]
@@ -145,17 +145,11 @@ namespace LinqExerciseTest
         {
             var people = new List<Person> {new Person {Name = "xiaoxiao"}, new Person {Name = "dada"}};
 
-            var peopleWithUpperCaseName = people.Select(p => UpperCaseName(p)).ToList();
+            people.Select(p => UpperCaseName(p)).ToList();
             foreach (Person person in people)
             {
                 UpperCaseName(person);
             }
-
-//            var peopleWithUpperCaseName1 = people.Select(person =>
-//                {
-//                    person.Name = person.Name.ToUpper();
-//                    return person;
-//                }).ToList();
 
             Assert.That(people[0].Name, Is.EqualTo("XIAOXIAO"));
         }
@@ -177,7 +171,7 @@ namespace LinqExerciseTest
             Assert.That(selectedNumbers1.First(), Is.EqualTo(3));
         }
 
-        [Test] //Just to learn anonymous Type
+        [Test] //anonymous Type
         public void Should_get_upper_case_and_lower_case_pair_of_people_with_select()
         {
             var people = new List<Person> {new Person {Name = "xiaoxiao"}, new Person {Name = "dada"}};
@@ -187,7 +181,7 @@ namespace LinqExerciseTest
             Assert.That(nameCouple.First(), Is.EqualTo(new {Upper = "XIAOXIAO", Lower = "xiaoxiao"}));
         }
 
-        [Test] //Just to learn anonymous Type
+        [Test] //anonymous Type
         public void should_get_some_properties_of_type_and_get_a_new_type_with_select()
         {
             var people = new List<Person>
@@ -196,7 +190,6 @@ namespace LinqExerciseTest
                     new Person {Name = "xiaolan", Age = 21}
                 };
 
-            //get the previous name of property if it is not named in the anonymous. 
             var peopleInfos = people.Select(p => new {p.Name, MyAge = p.Age});
 
             Assert.That(peopleInfos.First(), Is.EqualTo(new {Name = "xiaohong", MyAge = 20}));
@@ -216,7 +209,6 @@ namespace LinqExerciseTest
         public void should_be_able_to_deal_with_two_array_with_linq()
         {
             int[] numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-
             int[] numbers1 = {1, 1, 1, 1, 1, 1, 1, 1, 1};
             string[] digits = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
 
@@ -225,12 +217,12 @@ namespace LinqExerciseTest
             Assert.That(selectedDigits.ToArray()[9], Is.EqualTo("two"));
             Assert.That(selectedDigits.Count(), Is.EqualTo(81));
 
-            var selectedDigitsBySqlLinq = from num in numbers
-                                          from num1 in numbers1
-                                          select digits[num + num1];
+//            var selectedDigitsBySqlLinq = from num in numbers
+//                                          from num1 in numbers1
+//                                          select digits[num + num1];
 
-            Assert.That(selectedDigitsBySqlLinq.ToArray()[9], Is.EqualTo("two"));
-            Assert.That(selectedDigitsBySqlLinq.Count(), Is.EqualTo(81));
+//            Assert.That(selectedDigitsBySqlLinq.ToArray()[9], Is.EqualTo("two"));
+//            Assert.That(selectedDigitsBySqlLinq.Count(), Is.EqualTo(81));
         }
 
         [Test]

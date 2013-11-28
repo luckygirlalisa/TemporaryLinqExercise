@@ -9,12 +9,12 @@ namespace LinqExerciseTest
     [TestFixture]
     public class FutherLinqMethodsTest
     {
-        private readonly List<string> digits
-            = new List<string> {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+        private List<string> digits;
 
         [Test]
         public void should_return_special_member_with_take_and_skip()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             var specialThreeDigits = digits.Skip(2).Take(3);
 
             Assert.That(specialThreeDigits.First(), Is.EqualTo("two"));
@@ -29,17 +29,19 @@ namespace LinqExerciseTest
         [Test]
         public void should_return_all_members_that_satisfy_rules_with_takeWhile()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             var digitsLongerThanThreeWithTakeWhile = digits.TakeWhile(d => d.Length > 3);
             var digitsLongerThanFourWithWhere = digits.Where(d => d.Length > 3);   
 
-            PrintSequence(digitsLongerThanThreeWithTakeWhile);
+            Print<string>.PrintSequence(digitsLongerThanThreeWithTakeWhile);
             Console.WriteLine("\n");
-            PrintSequence(digitsLongerThanFourWithWhere);
+            Print<string>.PrintSequence(digitsLongerThanFourWithWhere);
         }
 
         [Test]
-        public void should_order_by_orderby()
+        public void should_order_sequence_by_orderby()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             var orderedDigitsByLetter = digits.OrderBy(d => d);
             var orderedDigitsByLength = digits.OrderBy(d => d.Length);
 
@@ -72,6 +74,7 @@ namespace LinqExerciseTest
         [Test]
         public void should_order_by_orderByDescending()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             var orderedByDecending = digits.OrderByDescending(d => d.Length);
 
             foreach (var digit in orderedByDecending)
@@ -83,6 +86,7 @@ namespace LinqExerciseTest
         [Test]
         public void should_order_firstly_by_length_and_secondly_alphabetically()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             var orderedDigit = digits.OrderBy(d => d.Length).ThenBy(d => d);
 
             var orderedDigit1 = from d in digits
@@ -98,6 +102,7 @@ namespace LinqExerciseTest
         [Test]
         public void should_order_firstly_by_length_and_secondly_alphabetically_descendingly()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             var orderedDigit = digits.OrderByDescending(d => d.Length).ThenByDescending(d => d);
 
             var orderedDigit1 = from d in digits
@@ -113,12 +118,13 @@ namespace LinqExerciseTest
         [Test]
         public void should_reverse_members_of_list_with_reverse()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             var reversedList = digits.ToArray().Reverse();
             digits.Reverse();
 
-            PrintSequence(reversedList);
+            Print<string>.PrintSequence(reversedList);
             Console.WriteLine("\n");
-            PrintSequence(digits);
+            Print<string>.PrintSequence(digits);
         }
 
         [Test]
@@ -136,8 +142,8 @@ namespace LinqExerciseTest
 
             foreach (var g in wordGroupsWithLinq)
             {
-                Console.WriteLine("Words that start with the letter '{0}':", g.FirstLetter);
-                Console.WriteLine("The count of Words that start with '{0}' is {1}", g.FirstLetter, g.Count);
+                Console.WriteLine("Words start with '{0}':", g.FirstLetter);
+                Console.WriteLine("The count of Words start with '{0}' is {1}", g.FirstLetter, g.Count);
                 foreach (var w in g.Words)
                 {
                     Console.WriteLine(w);
@@ -153,10 +159,8 @@ namespace LinqExerciseTest
             var doubles = numbers.OfType<double>();
 
             Console.WriteLine("Numbers stored as doubles:");
-            foreach (var d in doubles)
-            {
-                Console.WriteLine(d);
-            } 
+            
+            Print<double>.PrintSequence(doubles);
         }
 
         [Test]
@@ -165,55 +169,56 @@ namespace LinqExerciseTest
             int[] numbers = {1, 3, 2, 3, 2, 4, 1};
             var distinctNumbers = numbers.Distinct();
 
-            foreach (var number in distinctNumbers)
-            {
-                Console.WriteLine(number);
-            }
+            Print<int>.PrintSequence(distinctNumbers);
         }
 
         [Test]
         public void should_unite_two_list_with_distinct_members_by_union()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             string[] num = { "1", "2", "3", "zero", "one", "two"};
             var unitedNum = digits.Union(num);
-
-            foreach (var united in unitedNum)
-            {
-                Console.WriteLine(united);
-            }
+            
+            Print<string>.PrintSequence(unitedNum);
         }
 
         [Test]
         public void should_get_the_common_members_in_two_array_with_intersect()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             string[] num = { "1", "2", "3", "zero", "one", "two" };
             var commonMembers = digits.Intersect(num);
 
-            PrintSequence(commonMembers);
+            Print<string>.PrintSequence(commonMembers);
         }
 
         [Test]
         public void should_get_members_in_one_sequence_but_not_in_another_with_except()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             string[] num = { "1", "2", "3", "zero", "one", "two" };
+
             var specialMembers = digits.Except(num);
 
-            PrintSequence(specialMembers);
+            Print<string>.PrintSequence(specialMembers);
         }
 
         [Test]
         public void should_get_members_in_two_sequences_with_duplicates_by_concat()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             string[] num = { "1", "2", "3", "zero", "one", "two" };
+
             var allMembers = digits.Concat(num);
 
-            PrintSequence(allMembers);
+            Print<string>.PrintSequence(allMembers);
         }
 
 
         [Test]
         public void should_be_able_to_convert_Inumerable_to_array_and_list()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             var selectedDigits = digits.Where(x => x.Length > 2);
 
             var selectedArray = selectedDigits.ToArray();
@@ -242,10 +247,7 @@ namespace LinqExerciseTest
         {
             var rangedSequence = Enumerable.Range(10, 10);
 
-            foreach (var sequence in rangedSequence)
-            {
-                Console.WriteLine(sequence);
-            }
+            Print<int>.PrintSequence(rangedSequence);
         }
 
         [Test]
@@ -253,20 +255,22 @@ namespace LinqExerciseTest
         {
             var repeatedSequence = Enumerable.Repeat("ten", 10);
 
-            PrintSequence(repeatedSequence);
+            Print<string>.PrintSequence(repeatedSequence);
         }
 
         [Test]
         public void should_return_if_any_of_the_members_in_the_sequence_match_rule_with_any()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             bool selectedDigits = digits.Any(d => d.Contains("i"));
 
-            Console.WriteLine("There is one digit contains 'i': {0}", selectedDigits);
+            Console.WriteLine("There is at least one digit contains 'i': {0}", selectedDigits);
         }
 
         [Test]
         public void should_return_if_all_the_members_in_the_sequence_match_rule_with_all()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             bool onlyOdd = digits.All(d => d.Length % 2 == 1);
 
             Console.WriteLine("The length of all the digits are odd numbers: {0}", onlyOdd); 
@@ -275,15 +279,16 @@ namespace LinqExerciseTest
         [Test]
         public void should_return_bool_to_judge_if_one_sequence_equal_another_with_SequenceEqual()
         {
-            var nums = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+            var nums = new List<string> { "one", "zero", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
 
-            var isDigitsTotallyEqualToNums = digits.SequenceEqual(nums);
-            Assert.True(isDigitsTotallyEqualToNums);
+            Assert.False(digits.SequenceEqual(nums));
         }
 
         [Test]
         public void should_return_the_min_and_max_length_of_digits_with_min_and_max()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             var minLengthDigits = digits.Min(d => d.Length);
             var maxLengthDigits = digits.Max(d => d.Length);
             var averageLengthDigits = digits.Average(d => d.Length);
@@ -306,6 +311,7 @@ namespace LinqExerciseTest
         public void should_get_multiple_value_with_aggregate()
         {
             string[] elements = {"I", "am", "a", "developer"};
+
             string sentence = elements.Aggregate((runningElement, next) => runningElement + " " + next);
 
             Console.WriteLine(sentence);
@@ -329,7 +335,7 @@ namespace LinqExerciseTest
             var query1 = nums.Select(n => ++j).ToList();
             foreach (var q1 in query1)
             {
-                Console.WriteLine("q= {0}, i = {1}", q1, j);
+                Console.WriteLine("q= {0}, j = {1}", q1, j);
             }
         }
 
@@ -360,26 +366,28 @@ namespace LinqExerciseTest
         [Test]
         public void should_join_two_sequence_with_join()
         {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
             string[] num = { "1", "2", "3", "zero", "one", "two" };
             
-        List<string> digits
-            
-            = new List<string> {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-
             var joinedNum = digits.Join(num, d => d, n => n, (d, n) => d);
 
             var joinedNum1 = from d in digits
-                           join n in num on d equals n 
-                           select d;
+                             join n in num
+                             on d equals n 
+                             select d;
 
-            PrintSequence(joinedNum);
+            Print<string>.PrintSequence(joinedNum);
+            Print<string>.PrintSequence(joinedNum1);
         }
+    }
 
-        private static void PrintSequence(IEnumerable<string> allMembers)
+    public class Print<T>
+    {
+        public static void PrintSequence(IEnumerable<T> sequence)
         {
-            foreach (var allMember in allMembers)
+            foreach (var member in sequence)
             {
-                Console.WriteLine(allMember);
+                Console.WriteLine(member);
             }
         }
     }
