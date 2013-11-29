@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using Assert = NUnit.Framework.Assert;
 
 namespace LinqExerciseTest
 {
@@ -11,6 +10,7 @@ namespace LinqExerciseTest
     {
         private List<string> digits;
 
+        #region take and skip
         [Test]
         public void should_return_special_member_with_take_and_skip()
         {
@@ -25,23 +25,14 @@ namespace LinqExerciseTest
                 Console.WriteLine(specialThreeDigit);
             }
         }
+        #endregion
 
-        [Test]
-        public void should_return_all_members_that_satisfy_rules_with_takeWhile()
-        {
-            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
-            var digitsLongerThanThreeWithTakeWhile = digits.TakeWhile(d => d.Length > 3);
-            var digitsLongerThanFourWithWhere = digits.Where(d => d.Length > 3);   
-
-            Print<string>.PrintSequence(digitsLongerThanThreeWithTakeWhile);
-            Console.WriteLine("\n");
-            Print<string>.PrintSequence(digitsLongerThanFourWithWhere);
-        }
-
+        #region orderby and reverse
         [Test]
         public void should_order_sequence_by_orderby()
         {
             digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+
             var orderedDigitsByLetter = digits.OrderBy(d => d);
             var orderedDigitsByLength = digits.OrderBy(d => d.Length);
 
@@ -56,18 +47,6 @@ namespace LinqExerciseTest
             foreach (var orderedDigits in orderedDigitsByLength)
             {
                 Console.WriteLine(orderedDigits);
-            }
-        }
-
-        [Test]
-        public void should_order_by_letter_do_not_ignore_case()
-        {
-            string[] words = {"aPPLE", "AbAcUs", "bRaNcH", "BlUeBeRrY", "ClOvEr", "cHeRry"};
-
-            var sortedWords = words.OrderBy(a => a, new CaseInsensitiveComparer());
-            foreach (var digit in sortedWords)
-            {
-                Console.WriteLine(digit);
             }
         }
 
@@ -106,7 +85,7 @@ namespace LinqExerciseTest
             var orderedDigit = digits.OrderByDescending(d => d.Length).ThenByDescending(d => d);
 
             var orderedDigit1 = from d in digits
-                                orderby d.Length descending , d descending 
+                                orderby d.Length descending, d descending
                                 select d;
 
             foreach (var digit in orderedDigit)
@@ -127,27 +106,31 @@ namespace LinqExerciseTest
             Print<string>.PrintSequence(digits);
         }
 
+        #endregion
+
+        #region groupBy, typeOf,  distinct
+        
         [Test]
         public void should_group_list_with_group_by()
         {
             string[] words = {"chimpanzee", "abacus", "banana", "apple", "cheese" };
 
-            var wordGroups =
-                from w in words
-                group w by w[0] into g
-                select new { FirstLetter = g.Key, Words = g };
-
             var wordGroupsWithLinq = words.GroupBy(w => w[0])
                                     .Select( w => new { FirstLetter = w.Key, Words = w, Count = w.Count()});
 
+            var wordGroups =
+               from w in words
+               group w by w[0] into g
+               select new { FirstLetter = g.Key, Words = g, Count = g.Count() };
+           
             foreach (var g in wordGroupsWithLinq)
             {
-                Console.WriteLine("Words start with '{0}':", g.FirstLetter);
                 Console.WriteLine("The count of Words start with '{0}' is {1}", g.FirstLetter, g.Count);
                 foreach (var w in g.Words)
                 {
                     Console.WriteLine(w);
                 }
+                Console.WriteLine("\n");
             }
         }
 
@@ -171,7 +154,10 @@ namespace LinqExerciseTest
 
             Print<int>.PrintSequence(distinctNumbers);
         }
-
+#endregion
+      
+        #region union, intersect, except, concat
+        
         [Test]
         public void should_unite_two_list_with_distinct_members_by_union()
         {
@@ -214,34 +200,9 @@ namespace LinqExerciseTest
             Print<string>.PrintSequence(allMembers);
         }
 
+        #endregion
 
-        [Test]
-        public void should_be_able_to_convert_Inumerable_to_array_and_list()
-        {
-            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
-            var selectedDigits = digits.Where(x => x.Length > 2);
-
-            var selectedArray = selectedDigits.ToArray();
-            Assert.IsInstanceOf<string []>(selectedArray);
-           
-            var selectedList = selectedDigits.ToList();
-            Assert.IsInstanceOf<List<string>>(selectedList);
-        }
-
-        [Test]
-        public void should_be_able_to_convert_Inumerable_to_dictionary()
-        {
-            var people = new []
-                {
-                    new  {Age = 18, Name = "Kimi"},
-                    new  {Age = 20, Name = "Sendy"},
-                    new  {Age = 18, Name = "Shiling"}
-                };
-            var selectedPeople = people.ToDictionary(p => p.Name);
-            
-            Console.WriteLine(selectedPeople["Kimi"]);
-        }
-
+        #region range, repeat
         [Test]
         public void should_generate_sequence_with_range()
         {
@@ -257,7 +218,9 @@ namespace LinqExerciseTest
 
             Print<string>.PrintSequence(repeatedSequence);
         }
+        #endregion
 
+        #region any, all, SequenceEqual
         [Test]
         public void should_return_if_any_of_the_members_in_the_sequence_match_rule_with_any()
         {
@@ -285,6 +248,10 @@ namespace LinqExerciseTest
             Assert.False(digits.SequenceEqual(nums));
         }
 
+        #endregion
+       
+        #region min, max, sum, aggregate
+
         [Test]
         public void should_return_the_min_and_max_length_of_digits_with_min_and_max()
         {
@@ -308,15 +275,28 @@ namespace LinqExerciseTest
         }
 
         [Test]
-        public void should_get_multiple_value_with_aggregate()
+        public void should_get_sentence_from_string_list_with_aggregate()
         {
             string[] elements = {"I", "am", "a", "developer"};
 
             string sentence = elements.Aggregate((runningElement, next) => runningElement + " " + next);
 
-            Console.WriteLine(sentence);
+            Assert.That(sentence, Is.EqualTo("I am a developer"));
         }
 
+        [Test]
+        public void should_get_product_with_aggregate()
+        {
+            int[] nums = {1, 2, 3, 4};
+
+            int product = nums.Aggregate((runningNumber, next) => runningNumber*next);
+
+            Assert.That(product, Is.EqualTo(24));
+        }
+
+        #endregion
+
+        #region execution defer
         [Test]
         public void should_prove_the_query_excution_be_defered()
         {
@@ -362,7 +342,52 @@ namespace LinqExerciseTest
                 Console.WriteLine(q);
             }
         }
+        #endregion
 
+        #region not to talk about
+
+        [Test]
+        public void should_order_by_letter_do_not_ignore_case()
+        {
+            string[] words = { "aPPLE", "AbAcUs", "bRaNcH", "BlUeBeRrY", "ClOvEr", "cHeRry" };
+
+            var sortedWords = words.OrderBy(a => a, new CaseInsensitiveComparer());
+            foreach (var digit in sortedWords)
+            {
+                Console.WriteLine(digit);
+            }
+        }
+
+        #endregion
+        #region not to talk about
+        [Test]
+        public void should_be_able_to_convert_Inumerable_to_array_and_list()
+        {
+            digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+            var selectedDigits = digits.Where(x => x.Length > 2);
+
+            var selectedArray = selectedDigits.ToArray();
+            Assert.IsInstanceOf<string[]>(selectedArray);
+
+            var selectedList = selectedDigits.ToList();
+            Assert.IsInstanceOf<List<string>>(selectedList);
+        }
+
+        [Test]
+        public void should_be_able_to_convert_Inumerable_to_dictionary()
+        {
+            var people = new[]
+                {
+                    new  {Age = 18, Name = "Kimi"},
+                    new  {Age = 20, Name = "Sendy"},
+                    new  {Age = 18, Name = "Shiling"}
+                };
+            var selectedPeople = people.ToDictionary(p => p.Name);
+
+            Console.WriteLine(selectedPeople["Kimi"]);
+        }
+        #endregion
+        #region not to talk about
         [Test]
         public void should_join_two_sequence_with_join()
         {
@@ -379,8 +404,10 @@ namespace LinqExerciseTest
             Print<string>.PrintSequence(joinedNum);
             Print<string>.PrintSequence(joinedNum1);
         }
+        #endregion
     }
 
+    #region Test Helper
     public class Print<T>
     {
         public static void PrintSequence(IEnumerable<T> sequence)
@@ -399,4 +426,5 @@ namespace LinqExerciseTest
             return string.Compare(x, y, StringComparison.Ordinal);
         }
     }
+#endregion
 }

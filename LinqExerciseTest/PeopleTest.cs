@@ -18,6 +18,8 @@ namespace LinqExerciseTest
             people = new List<Person> {person1, person2};
         }
 
+        #region find, first, firstOrDefault, elementAt. Find one element methods test
+       
         [Test]
         public void Should_get_first_person_with_name_length_larger_than_5_with_Find()
         {
@@ -79,13 +81,15 @@ namespace LinqExerciseTest
         [Test]
         public void should_get_special_element_with_index_by_elementAt()
         {
-//            string[] nums = {"zero", "one", "two", "three", "four"};
             var nums = new List<string> {"zero", "one", "two", "three", "four"};
             var secondNumber = nums.ElementAt(1);
 
             Assert.That(secondNumber, Is.EqualTo("one"));
         }
 
+        #endregion
+
+        #region count
         [Test]
         public void Should_get_people_list_with_age_larger_than_20_with_Count()
         {
@@ -93,6 +97,9 @@ namespace LinqExerciseTest
             Assert.That(findedPersonNum, Is.EqualTo(1));
         }
 
+        #endregion
+
+        #region where, takeWhile
         [Test]
         public void Should_find_person_list_older_than_20_with_Where()
         {
@@ -102,28 +109,37 @@ namespace LinqExerciseTest
         }
 
         [Test]
-        public void should_return_list_with_two_parameters_using_where_or_select()
+        public void should_return_all_members_that_satisfy_rules_with_takeWhile()
         {
-            string[] nums = {"zero", "one", "two", "three", "four"};
-            var resultNums = nums.Where((num, index) => num.Length > index);
-            var result = nums.Select((num, index) => num.Length > index);
+            var digits = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+            var digitsLongerThanThreeWithTakeWhile = digits.TakeWhile(d => d.Length > 3);
+            var digitsLongerThanFourWithWhere = digits.Where(d => d.Length > 3);
 
-            Console.WriteLine(resultNums.First());
-            Console.WriteLine(result.First());
+            Print<string>.PrintSequence(digitsLongerThanThreeWithTakeWhile);
+            Console.WriteLine("\n");
+            Print<string>.PrintSequence(digitsLongerThanFourWithWhere);
         }
+
+        #endregion
+
+        #region select
 
         [Test]
         public void should_get_age_list_of_people_with_select()
         {
-            var people = new List<Person> {new Person {Age = 10}, new Person {Age = 20}};
+            var people = new List<Person> { new Person { Age = 10 }, new Person { Age = 20 } };
+            var expectedAgeOfPeople = new List<int> { 10, 20 };
 
             var ageOfPeople = people.Select(p => p.Age).ToList();
-            var expectedAgeOfPeople = new List<int> {10, 20};
 
             Assert.That(ageOfPeople, Is.EqualTo(expectedAgeOfPeople));
+        }
 
-            var modifiedAgeOfPeople = people.Select(p => p.Age = p.Age*2).ToList();
-            var expectedMultipleAgeOfPeople = new List<int> {20, 40};
+        [Test]
+        public void should_be_able_to_modify_age_of_people_with_select()
+        {
+            var modifiedAgeOfPeople = people.Select(p => p.Age * 2).ToList();
+            var expectedMultipleAgeOfPeople = new List<int> { 20, 40 };
 
             Assert.That(modifiedAgeOfPeople, Is.EqualTo(expectedMultipleAgeOfPeople));
             foreach (var i in people)
@@ -160,15 +176,18 @@ namespace LinqExerciseTest
             return person;
         }
 
-        [Test]
-        public void should_use_index_with_select_and_where_dealing_with_array()
-        {
-            int[] numbers = {1, 2, 3};
-            var selectedNumbers = numbers.Select((num, index) => new {Num = num, Sum = num + index});
-            var selectedNumbers1 = numbers.Where((num, index) => index > 1);
+        #endregion
 
-            Assert.That(selectedNumbers.First(), Is.EqualTo(new {Num = 1, Sum = 1}));
-            Assert.That(selectedNumbers1.First(), Is.EqualTo(3));
+        #region index, anonymous type, select many
+        [Test] //index
+        public void should_return_list_with_two_parameters_using_where_or_select()
+        {
+            string[] nums = { "zero", "one", "two", "three", "four" };
+            var resultNums = nums.Where((num, index) => num.Length > index);
+            var result = nums.Select((num, index) => num.Length > index);
+
+            Console.WriteLine(resultNums.First());
+            Console.WriteLine(result.First());
         }
 
         [Test] //anonymous Type
@@ -195,59 +214,7 @@ namespace LinqExerciseTest
             Assert.That(peopleInfos.First(), Is.EqualTo(new {Name = "xiaohong", MyAge = 20}));
         }
 
-        [Test]
-        public void dealing_with_two_array_with_linq()
-        {
-            int[] numbers = {5, 4, 1, 3, 9, 8, 6, 7, 2, 0};
-            string[] digits = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-                
-            var selectedDigits = numbers.Where(n => n < 5).Select(d => digits[d]);
-            Assert.That(selectedDigits.First(), Is.EqualTo("four"));
-        }
-
-        [Test]
-        public void should_be_able_to_deal_with_two_array_with_linq()
-        {
-            int[] numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-            int[] numbers1 = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-            string[] digits = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-
-            var selectedDigits = numbers.SelectMany(n => numbers1.Select(n1 => n1), (n, n1) => digits[n + n1]);
-
-            Assert.That(selectedDigits.ToArray()[9], Is.EqualTo("two"));
-            Assert.That(selectedDigits.Count(), Is.EqualTo(81));
-
-//            var selectedDigitsBySqlLinq = from num in numbers
-//                                          from num1 in numbers1
-//                                          select digits[num + num1];
-
-//            Assert.That(selectedDigitsBySqlLinq.ToArray()[9], Is.EqualTo("two"));
-//            Assert.That(selectedDigitsBySqlLinq.Count(), Is.EqualTo(81));
-        }
-
-        [Test]
-        public void should_be_able_to_deal_with_multiple_array_with_linq()
-        {
-            int[] numbers = { 0, 0, 0, 0, 0, 0, 0, 0, 0};
-            int[] numbers1 = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-            int[] numbers2 = {2, 2, 2, 2, 2, 2, 2, 2, 2};
-            string[] digits = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-
-//            var selectedDigits = 
-//                numbers.SelectMany(n => numbers1.SelectMany(n1 => numbers2.Where(n2 => n2 > n1)), (n, n1, n2) => digits[n + n1 + n2]);
-//            Assert.That(selectedDigits.ToArray()[9], Is.EqualTo("two"));
-//            Assert.That(selectedDigits.Count(), Is.EqualTo(81));
-
-            var selectedDigitsBySqlLinq = from num in numbers
-                                          from num1 in numbers1
-                                          from num2 in numbers2
-                                          select digits[num + num1 + num2];
-
-            Assert.That(selectedDigitsBySqlLinq.ToArray()[9], Is.EqualTo("three"));
-            Assert.That(selectedDigitsBySqlLinq.Count(), Is.EqualTo(9* 9 *9));
-        }
-
-        [Test]
+        [Test] //select many
         public void should_return_the_second_level_members_with_selectMany()
         {
             var people = new List<Person>
@@ -273,5 +240,64 @@ namespace LinqExerciseTest
                 Console.WriteLine(pet);
             }
         }
+
+        #endregion
+
+        #region not to talk about
+
+        [Test]
+        public void should_be_able_to_deal_with_two_array_with_linq()
+        {
+            int[] numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+            int[] numbers1 = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+            string[] digits = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+
+            var selectedDigits = numbers.SelectMany(n => numbers1.Select(n1 => n1), (n, n1) => digits[n + n1]);
+
+            Assert.That(selectedDigits.ToArray()[9], Is.EqualTo("two"));
+            Assert.That(selectedDigits.Count(), Is.EqualTo(81));
+
+            var selectedDigitsBySqlLinq = from num in numbers
+                                          from num1 in numbers1
+                                          select digits[num + num1];
+
+            Assert.That(selectedDigitsBySqlLinq.ToArray()[9], Is.EqualTo("two"));
+            Assert.That(selectedDigitsBySqlLinq.Count(), Is.EqualTo(81));
+        }
+
+        [Test]
+        public void dealing_with_two_array_with_linq()
+        {
+            int[] numbers = {5, 4, 1, 3, 9, 8, 6, 7, 2, 0};
+            string[] digits = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+                
+            var selectedDigits = numbers.Where(n => n < 5).Select(d => digits[d]);
+            Assert.That(selectedDigits.First(), Is.EqualTo("four"));
+        }
+
+        [Test]
+        public void should_be_able_to_deal_with_multiple_array_with_linq()
+        {
+            int[] numbers = { 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            int[] numbers1 = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+            int[] numbers2 = {2, 2, 2, 2, 2, 2, 2, 2, 2};
+            string[] digits = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+
+//            var selectedDigits = 
+//                numbers.SelectMany(n => numbers1.SelectMany(n1 => numbers2.Where(n2 => n2 > n1)), (n, n1, n2) => digits[n + n1 + n2]);
+//            Assert.That(selectedDigits.ToArray()[9], Is.EqualTo("two"));
+//            Assert.That(selectedDigits.Count(), Is.EqualTo(81));
+
+            var selectedDigitsBySqlLinq = from num in numbers
+                                          from num1 in numbers1
+                                          from num2 in numbers2
+                                          select digits[num + num1 + num2];
+
+            Assert.That(selectedDigitsBySqlLinq.ToArray()[9], Is.EqualTo("three"));
+            Assert.That(selectedDigitsBySqlLinq.Count(), Is.EqualTo(9* 9 *9));
+        }
+        #endregion
+
+       
     }
 }
